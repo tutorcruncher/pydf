@@ -23,12 +23,7 @@ def execute_wk(*args):
     wk_args = (wkhtmltopdf_cmd,) + args
     p = subprocess.Popen(wk_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
-    # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
-    # seem to have generated a pdf
-    if p.returncode != 0 and stdout[:4] != '%PDF':
-        raise IOError('error running wkhtmltopdf, command: %r\nresponse: "%s"' % \
-            (wk_args, stderr.strip(' \n')))
-    return stdout, stderr
+    return stdout, stderr, p.returncode
 
 
 def generate_pdf(source,
@@ -95,20 +90,27 @@ def generate_pdf(source,
         else:
             cmd_args.extend([arg_name, str(value)])
 
-    def gen(src):
+    def gen_pdf(src, cmd_args):
         with NamedTemporaryFile(suffix='.pdf', mode='rwb+') as pdf_file:
-            execute_wk(*(cmd_args + [src, pdf_file.name]))
+            cmd_args += [src, pdf_file.name]
+            _, stderr, returncode = execute_wk(*cmd_args)
             pdf_file.seek(0)
-            return pdf_file.read()
+            pdf_string = pdf_file.read()
+            # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
+            # seem to have generated a pdf
+            if returncode != 0 and pdf_string[:4] != '%PDF':
+                raise IOError('error running wkhtmltopdf, command: %r\nresponse: "%s"' % \
+                    (cmd_args, stderr.strip(' \n')))
+            return pdf_string
 
     if is_url:
-        return gen(source)
+        return gen_pdf(source, cmd_args)
 
     with NamedTemporaryFile(suffix='.html', mode='w') as html_file:
         html_file.write(source.encode('utf-8'))
         html_file.flush()
         html_file.seek(0)
-        return gen(html_file.name)
+        return gen_pdf(html_file.name, cmd_args)
 
 
 def get_version():
