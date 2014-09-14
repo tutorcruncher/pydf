@@ -16,7 +16,7 @@ setup(
     url='https://github.com/samuelcolvin/pydf',
     packages=['pydf'],
     platforms='any',
-    package_data={'pydf': ['bin/wkhtmltopdf*']},
+    package_data={'pydf': ['bin/*']},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
