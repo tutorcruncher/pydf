@@ -15,7 +15,7 @@ def execute_wk(*args):
     this_dir = os.path.dirname(__file__)
     on_heroku = 'DYNO' in os.environ
     wk_name = 'wkhtmltopdf-heroku' if on_heroku else 'wkhtmltopdf'
-    wkhtmltopdf_default = os.path.join(this_dir, '../bin/', wk_name)
+    wkhtmltopdf_default = os.path.join(this_dir, 'bin', wk_name)
     # Reference command
     wkhtmltopdf_cmd = os.environ.get('WKHTMLTOPDF_CMD', wkhtmltopdf_default)
     if not os.path.isfile(wkhtmltopdf_cmd):
