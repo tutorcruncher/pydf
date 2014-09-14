@@ -69,6 +69,14 @@ class PywkherTestCase(TestCase):
         else:
             raise AssertionError('Should have raised a TypeError')
 
+    def test_no_arguments(self):
+        try:
+            generate_pdf('www.')
+        except IOError:
+            pass
+        else:
+            raise AssertionError('Should have raised a IOError')
+
     def test_get_version(self):
         print get_version()
 
