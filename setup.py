@@ -8,7 +8,7 @@ description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
 
 setup(
     name='pydf',
-    version='0.1',
+    version='0.2',
     description=description,
     author='Samuel Colvin',
     license='MIT',
