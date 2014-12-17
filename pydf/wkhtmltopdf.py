@@ -2,7 +2,7 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 
 def execute_wk(*args):
@@ -13,8 +13,7 @@ def execute_wk(*args):
     :return: stdout, stderr
     """
     this_dir = os.path.dirname(__file__)
-    on_heroku = 'DYNO' in os.environ
-    wk_name = 'wkhtmltopdf-heroku' if on_heroku else 'wkhtmltopdf'
+    wk_name = 'wkhtmltopdf'
     wkhtmltopdf_default = os.path.join(this_dir, 'bin', wk_name)
     # Reference command
     wkhtmltopdf_cmd = os.environ.get('WKHTMLTOPDF_CMD', wkhtmltopdf_default)
@@ -120,7 +119,12 @@ def get_version():
     :return: version string
     """
     v = 'pydf version: %s\n' % __version__
-    v += 'wkhtmltopdf version: %s' % execute_wk('-V')[0]
+    try:
+        wk_version = execute_wk('-V')[0]
+    except Exception, e:
+        # we catch all errors here to make sure we get a version no matter what
+        wk_version = 'Error: %s' % str(e)
+    v += 'wkhtmltopdf version: %s' % wk_version
     return v
 
 
