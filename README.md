@@ -5,7 +5,7 @@ PDF generation in python using [wkhtmltopdf](http://wkhtmltopdf.org/) suitable f
 
 Based on [pywkher](https://github.com/jwmayfield/pywkher) but significantly extended.
 
-The repo is pretty large (currently 116mb) because it contains two binary version of wkhtmltopdf, one for use on Heroku (Ubuntu 10.04) and one for use on Ubuntu 14.04. See [this](https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1817) discussion for an explanation.
+Currently using **wkhtmltopdf v. 0.12.2** (beta).
 
 ## Basic Usage
 
