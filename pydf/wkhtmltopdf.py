@@ -13,8 +13,7 @@ def execute_wk(*args):
     :return: stdout, stderr
     """
     this_dir = os.path.dirname(__file__)
-    on_heroku = 'DYNO' in os.environ
-    wk_name = 'wkhtmltopdf-heroku' if on_heroku else 'wkhtmltopdf'
+    wk_name = 'wkhtmltopdf'
     wkhtmltopdf_default = os.path.join(this_dir, 'bin', wk_name)
     # Reference command
     wkhtmltopdf_cmd = os.environ.get('WKHTMLTOPDF_CMD', wkhtmltopdf_default)
