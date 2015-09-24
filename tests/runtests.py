@@ -4,7 +4,7 @@ from unittest import TestCase
 from pydf import generate_pdf, get_version, get_help, get_extended_help
 
 
-class PywkherTestCase(TestCase):
+class PydfTestCase(TestCase):
     def test_generate_pdf_with_html(self):
         pdf_content = generate_pdf('<html><body>Is this thing on?</body></html>')
         assert pdf_content[:4] == '%PDF'
@@ -53,29 +53,14 @@ class PywkherTestCase(TestCase):
 
     def test_wrong_path(self):
         os.environ['WKHTMLTOPDF_CMD'] = 'foo bar'
-        try:
-            get_help()
-        except IOError:
-            pass
-        else:
-            raise AssertionError('should have raised IOError with wrong WKHTMLTOPDF_CMD')
+        self.assertRaises(IOError, get_help)
         del os.environ['WKHTMLTOPDF_CMD']
 
     def test_no_arguments(self):
-        try:
-            generate_pdf()
-        except TypeError:
-            pass
-        else:
-            raise AssertionError('Should have raised a TypeError')
+        self.assertRaises(TypeError, generate_pdf)
 
-    def test_no_arguments(self):
-        try:
-            generate_pdf('www.')
-        except IOError:
-            pass
-        else:
-            raise AssertionError('Should have raised a IOError')
+    def test_bad_arguments(self):
+        self.assertRaises(IOError, generate_pdf, 'www.')
 
     def test_get_version(self):
         print get_version()
