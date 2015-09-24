@@ -1,20 +1,31 @@
 pydf
 ====
 
-PDF generation in python using [wkhtmltopdf](http://wkhtmltopdf.org/) suitable for Heroku.
+PDF generation in python using [wkhtmltopdf](http://wkhtmltopdf.org/).
+
+Wkhtmltopdf binaries are precompiled and included in the package making pydf easier to use,
+in particular this means pydf works on heroku.
 
 Based on [pywkher](https://github.com/jwmayfield/pywkher) but significantly extended.
 
 Currently using **wkhtmltopdf v. 0.12.2** (beta).
 
+## Install
+
+    pip install python-pdf
+
+(pydf was taken, but I guess python-pdf is a clearer name anyway.)
+
 ## Basic Usage
 
-    import pydf
-    pdf = pydf.generate_pdf('<h1>this is html</h1>')
-    open('test_doc.pdf', 'w').write(pdf)
+```python
+import pydf
+pdf = pydf.generate_pdf('<h1>this is html</h1>')
+open('test_doc.pdf', 'w').write(pdf)
 
-    pdf = pydf.generate_pdf('www.google.com')
-    open('google.pdf', 'w').write(pdf)
+pdf = pydf.generate_pdf('www.google.com')
+open('google.pdf', 'w').write(pdf)
+```
 
 ## API
 
@@ -36,21 +47,21 @@ and None arguments are missed, everything else is passed with str(value).
 
 **Arguments:**
 
-* source: html string to generate pdf from or url to get
-* quiet: bool
-* grayscale: bool
-* lowquality: bool
-* margin_bottom: string eg. 10mm
-* margin_left: string eg. 10mm
-* margin_right: string eg. 10mm
-* margin_top: string eg. 10mm
-* orientation: Portrait or Landscape
-* page_height: string eg. 10mm
-* page_width: string eg. 10mm
-* page_size: string: A4, Letter, etc.
-* image_dpi: int default 600
-* image_quality: int default 94
-* extra_kwargs: any exotic extra options for wkhtmltopdf
+* `source`: html string to generate pdf from or url to get
+* `quiet`: bool
+* `grayscale`: bool
+* `lowquality`: bool
+* `margin_bottom`: string eg. 10mm
+* `margin_left`: string eg. 10mm
+* `margin_right`: string eg. 10mm
+* `margin_top`: string eg. 10mm
+* `orientation`: Portrait or Landscape
+* `page_height`: string eg. 10mm
+* `page_width`: string eg. 10mm
+* `page_size`: string: A4, Letter, etc.
+* `image_dpi`: int default 600
+* `image_quality`: int default 94
+* `extra_kwargs`: any exotic extra options for wkhtmltopdf
 
 Returns string representing pdf
 
@@ -68,6 +79,6 @@ uses -h command line option
 get extended help string from wkhtmltopdf binary
 uses -H command line option
 
-### execute_wk(*args)
+#### execute_wk(*args)
 
 Low level function to call wkhtmltopdf, arguments are added to wkhtmltopdf binary and passed to subprocess with not processing.
