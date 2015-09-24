@@ -1,0 +1,16 @@
+language: python
+sudo: false
+
+python:
+  - "2.7"
+#  - "3.4"
+
+install:
+  - pip install coverage codecov flake8
+
+script:
+  - coverage run --source=pydf setup.py test
+  - flake8 --max-line-length 120 pydf/
+
+after_success:
+  - codecov

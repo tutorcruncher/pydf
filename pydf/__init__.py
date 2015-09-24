@@ -1,1 +1,1 @@
-from .wkhtmltopdf import *
+from .wkhtmltopdf import *  # noqa

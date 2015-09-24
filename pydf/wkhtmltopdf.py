@@ -98,8 +98,8 @@ def generate_pdf(source,
             # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
             # seem to have generated a pdf
             if returncode != 0 and pdf_string[:4] != '%PDF':
-                raise IOError('error running wkhtmltopdf, command: %r\nresponse: "%s"' % \
-                    (cmd_args, stderr.strip(' \n')))
+                raise IOError('error running wkhtmltopdf, command: %r\nresponse: "%s"' %
+                              (cmd_args, stderr.strip(' \n')))
             return pdf_string
 
     if is_url:
