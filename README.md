@@ -1,6 +1,9 @@
 pydf
 ====
 
+[![codecov.io](http://codecov.io/github/samuelcolvin/pydf/coverage.svg?branch=master)](http://codecov.io/github/samuelcolvin/pydf?branch=master)
+[![Build Status](https://travis-ci.org/samuelcolvin/pydf.svg)](https://travis-ci.org/samuelcolvin/pydf)
+
 PDF generation in python using [wkhtmltopdf](http://wkhtmltopdf.org/).
 
 Wkhtmltopdf binaries are precompiled and included in the package making pydf easier to use,
