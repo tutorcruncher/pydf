@@ -7,3 +7,5 @@ dist/
 .installed.cfg
 *.egg
 .idea
+build
+env
