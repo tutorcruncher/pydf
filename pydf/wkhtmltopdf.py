@@ -2,7 +2,7 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-__version__ = '0.21'
+__version__ = '0.22'
 
 
 def execute_wk(*args):

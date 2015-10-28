@@ -3,6 +3,7 @@ pydf
 
 [![codecov.io](https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master)](https://codecov.io/github/tutorcruncher/pydf?branch=master)
 [![Build Status](https://travis-ci.org/tutorcruncher/pydf.svg?branch=master)](https://travis-ci.org/tutorcruncher/pydf)
+[![PyPI](https://img.shields.io/pypi/v/python-pdf.svg)](https://pypi.python.org/pypi/python-pdf)
 
 PDF generation in python using [wkhtmltopdf](http://wkhtmltopdf.org/).
 
@@ -43,7 +44,7 @@ For details on extra arguments see the output of get_help()
 and get_extended_help()
 
 All arguments whether specified or caught with extra_kwargs are converted
-to command line args with "'--' + original_name.replace('_', '-')"
+to command line args with `'--' + original_name.replace('_', '-')`.
 
 Arguments which are True are passed with no value eg. just --quiet, False
 and None arguments are missed, everything else is passed with str(value).
