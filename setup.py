@@ -15,7 +15,7 @@ class OverrideInstall(install):
         install.run(self)
         for filepath in self.get_outputs():
             if filepath.endswith('pydf/bin/wkhtmltopdf'):
-                os.chmod(filepath, 0775)
+                os.chmod(filepath, 775)
 
 
 setup(
