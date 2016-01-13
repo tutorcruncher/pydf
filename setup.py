@@ -21,7 +21,7 @@ class OverrideInstall(install):
 setup(
     name='python-pdf',
     cmdclass={'install': OverrideInstall},
-    version='0.22',
+    version='0.23',
     description=description,
     long_description=long_description,
     author='Samuel Colvin',
