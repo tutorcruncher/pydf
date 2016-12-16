@@ -103,6 +103,11 @@ Changelog
 -  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
 -  code cleanup
 
+0.21
+~~~~
+
+- correct permissions on wkhtmltopdf binary.
+
 .. |Build Status| image:: https://travis-ci.org/tutorcruncher/pydf.svg?branch=master
    :target: https://travis-ci.org/tutorcruncher/pydf
 .. |codecov.io| image:: https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master

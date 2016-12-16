@@ -1,8 +1,7 @@
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
-
-__version__ = '0.3'
+from .version import VERSION
 
 
 def execute_wk(*args):
@@ -132,14 +131,12 @@ def get_version():
 
     :return: version string
     """
-    v = 'pydf version: %s\n' % __version__
     try:
         wk_version = _string_execute('-V')
     except Exception as e:
         # we catch all errors here to make sure we get a version no matter what
-        wk_version = 'Error: %s' % str(e)
-    v += 'wkhtmltopdf version: %s' % wk_version
-    return v
+        wk_version = '%s: %s' % (e.__class__.__name__, e)
+    return 'pydf version: %s\nwkhtmltopdf version: %s' % (VERSION, wk_version)
 
 
 def get_help():

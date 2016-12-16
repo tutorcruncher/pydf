@@ -18,10 +18,10 @@ install:
 script:
 - coverage run --source=pydf setup.py test
 - flake8 pydf/
+- if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then python setup.py check -rms; fi
 - python setup.py install
 - tests/check_file_permissions.py
 - python -c "import pydf; print(pydf.get_version())"
-- if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then python setup.py check -rms; fi
 
 after_success:
 - ls -lha

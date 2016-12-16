@@ -1,6 +1,7 @@
 import os
 from setuptools import setup
 from setuptools.command.install import install
+from pydf.version import VERSION
 
 description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +20,7 @@ class OverrideInstall(install):
 setup(
     name='python-pdf',
     cmdclass={'install': OverrideInstall},
-    version='0.23',
+    version=str(VERSION),
     description=description,
     long_description=long_description,
     author='Samuel Colvin',
