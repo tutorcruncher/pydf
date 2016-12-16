@@ -21,15 +21,6 @@ Install
 
 (pydf was taken, but I guess python-pdf is a clearer name anyway.)
 
-Changelog
----------
-
-0.3
-~~~
-
--  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
--  code cleanup
-
 Basic Usage
 -----------
 
@@ -103,11 +94,20 @@ option
 Low level function to call wkhtmltopdf, arguments are added to
 wkhtmltopdf binary and passed to subprocess with not processing.
 
+Changelog
+---------
+
+0.3
+~~~
+
+-  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
+-  code cleanup
+
 .. |Build Status| image:: https://travis-ci.org/tutorcruncher/pydf.svg?branch=master
    :target: https://travis-ci.org/tutorcruncher/pydf
 .. |codecov.io| image:: https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master
    :target: https://codecov.io/github/tutorcruncher/pydf?branch=master
 .. |PyPI Status| image:: https://img.shields.io/pypi/v/python-pdf.svg?style=flat
    :target: https://pypi.python.org/pypi/python-pdf
-.. |license| image:: https://img.shields.io/pypi/l/pydf.svg
+.. |license| image:: https://img.shields.io/pypi/l/python-pdf.svg
    :target: https://github.com/tutorcruncher/pydf
