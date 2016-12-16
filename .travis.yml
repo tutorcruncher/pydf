@@ -20,6 +20,7 @@ script:
 - flake8 --max-line-length 120 pydf/
 - python setup.py install
 - tests/check_file_permissions.py
+- python -c "import pydf; print(pydf.get_version())"
 
 after_success:
 - ls -lha
