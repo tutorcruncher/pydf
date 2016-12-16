@@ -13,11 +13,12 @@ matrix:
   - python: 'nightly'
 
 install:
-- pip install coverage flake8
+- pip install coverage flake8 Pygments docutils
 
 script:
 - coverage run --source=pydf setup.py test
-- flake8 --max-line-length 120 pydf/
+- flake8 pydf/
+- python setup.py check -rms
 - python setup.py install
 - tests/check_file_permissions.py
 - python -c "import pydf; print(pydf.get_version())"

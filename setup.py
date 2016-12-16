@@ -1,13 +1,11 @@
-import sys
 import os
 from setuptools import setup
 from setuptools.command.install import install
 
 description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
-long_description = description
-if 'upload' in sys.argv or 'register' in sys.argv:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(THIS_DIR, 'README.rst')) as f:
+    long_description = f.read()
 
 
 class OverrideInstall(install):
