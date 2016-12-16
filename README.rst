@@ -103,11 +103,11 @@ option
 Low level function to call wkhtmltopdf, arguments are added to
 wkhtmltopdf binary and passed to subprocess with not processing.
 
-.. |Build Status| image:: https://travis-ci.org/samuelcolvin/pydf.svg?branch=master
-   :target: https://travis-ci.org/samuelcolvin/pydf
-.. |codecov.io| image:: http://codecov.io/github/samuelcolvin/pydf/coverage.svg?branch=master
-   :target: http://codecov.io/github/samuelcolvin/pydf?branch=master
-.. |PyPI Status| image:: https://img.shields.io/pypi/v/pydf.svg?style=flat
-   :target: https://pypi.python.org/pypi/pydf
+.. |Build Status| image:: https://travis-ci.org/tutorcruncher/pydf.svg?branch=master
+   :target: https://travis-ci.org/tutorcruncher/pydf
+.. |codecov.io| image:: https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master
+   :target: https://codecov.io/github/tutorcruncher/pydf?branch=master
+.. |PyPI Status| image:: https://img.shields.io/pypi/v/python-pdf.svg?style=flat
+   :target: https://pypi.python.org/pypi/python-pdf
 .. |license| image:: https://img.shields.io/pypi/l/pydf.svg
-   :target: https://github.com/samuelcolvin/pydf
+   :target: https://github.com/tutorcruncher/pydf
