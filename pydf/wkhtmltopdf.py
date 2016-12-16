@@ -122,6 +122,10 @@ def generate_pdf(source,
         return gen_pdf(html_file.name, cmd_args)
 
 
+def _string_execute(*args):
+    return execute_wk(*args)[0].decode('utf8').strip(' \n')
+
+
 def get_version():
     """
     Get version of pydf and wkhtmltopdf binary
@@ -130,11 +134,11 @@ def get_version():
     """
     v = 'pydf version: %s\n' % __version__
     try:
-        wk_version = execute_wk('-V')[0]
+        wk_version = _string_execute('-V')
     except Exception as e:
         # we catch all errors here to make sure we get a version no matter what
         wk_version = 'Error: %s' % str(e)
-    v += 'wkhtmltopdf version: %s' % wk_version.decode('utf8')
+    v += 'wkhtmltopdf version: %s' % wk_version
     return v
 
 
@@ -145,7 +149,7 @@ def get_help():
 
     :return: help string
     """
-    return execute_wk('-h')[0].decode('utf8')
+    return _string_execute('-h')
 
 
 def get_extended_help():
@@ -155,4 +159,4 @@ def get_extended_help():
 
     :return: extended help string
     """
-    return execute_wk('-H')[0].decode('utf8')
+    return _string_execute('-H')
