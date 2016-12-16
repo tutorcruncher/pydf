@@ -2,7 +2,7 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-__version__ = '0.23'
+__version__ = '0.3'
 
 
 def execute_wk(*args):
@@ -72,16 +72,27 @@ def generate_pdf(source,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
-    is_url = any(source.strip().startswith(s) for s in ('http', 'www'))
+    is_url = source.strip().startswith(('http', 'www'))
 
-    loc = locals()
-    py_args = {n: loc[n] for n in
-               ['quiet', 'grayscale', 'lowquality', 'margin_bottom', 'margin_left', 'margin_right', 'margin_top',
-               'orientation', 'page_height', 'page_width', 'page_size', 'image_dpi', 'image_quality']}
+    py_args = dict(
+        quiet=quiet,
+        grayscale=grayscale,
+        lowquality=lowquality,
+        margin_bottom=margin_bottom,
+        margin_left=margin_left,
+        margin_right=margin_right,
+        margin_top=margin_top,
+        orientation=orientation,
+        page_height=page_height,
+        page_width=page_width,
+        page_size=page_size,
+        image_dpi=image_dpi,
+        image_quality=image_quality,
+    )
     py_args.update(extra_kwargs)
     cmd_args = []
     for name, value in py_args.items():
-        if value in [None, False]:
+        if value in {None, False}:
             continue
         arg_name = '--' + name.replace('_', '-')
         if value is True:
@@ -105,7 +116,7 @@ def generate_pdf(source,
         return gen_pdf(source, cmd_args)
 
     with NamedTemporaryFile(suffix='.html', mode='wb') as html_file:
-        html_file.write(source.encode('utf-8'))
+        html_file.write(source.encode('utf8'))
         html_file.flush()
         html_file.seek(0)
         return gen_pdf(html_file.name, cmd_args)
@@ -123,7 +134,7 @@ def get_version():
     except Exception as e:
         # we catch all errors here to make sure we get a version no matter what
         wk_version = 'Error: %s' % str(e)
-    v += 'wkhtmltopdf version: %s' % wk_version
+    v += 'wkhtmltopdf version: %s' % wk_version.decode('utf8')
     return v
 
 
@@ -134,7 +145,7 @@ def get_help():
 
     :return: help string
     """
-    return execute_wk('-h')[0]
+    return execute_wk('-h')[0].decode('utf8')
 
 
 def get_extended_help():
@@ -144,4 +155,4 @@ def get_extended_help():
 
     :return: extended help string
     """
-    return execute_wk('-H')[0]
+    return execute_wk('-H')[0].decode('utf8')
