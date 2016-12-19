@@ -98,7 +98,7 @@ Changelog
 ---------
 
 0.30
-~~~
+~~~~
 
 -  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
 -  code cleanup
