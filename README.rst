@@ -97,11 +97,12 @@ wkhtmltopdf binary and passed to subprocess with not processing.
 Changelog
 ---------
 
-0.3
+0.30
 ~~~
 
 -  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
 -  code cleanup
+- (this is teh same as ``v0.3``, I make a mistake when versioning :smile:)
 
 0.21
 ~~~~
