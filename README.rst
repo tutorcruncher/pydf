@@ -102,7 +102,7 @@ Changelog
 
 -  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
 -  code cleanup
-- (this is teh same as ``v0.3``, I make a mistake when versioning :smile:)
+- (this is the same as ``v0.3``, I made a mistake when versioning)
 
 0.21
 ~~~~
