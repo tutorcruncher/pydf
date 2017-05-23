@@ -1,23 +1,13 @@
-from io import BytesIO, StringIO
-
-import pdfminer.layout
 import pytest
-from pdfminer import high_level
 
 from pydf import generate_pdf, get_extended_help, get_help, get_version
-
-
-def get_pdf_text(pdf_data: bytes) -> str:
-    laparams = pdfminer.layout.LAParams()
-    output = StringIO()
-    high_level.extract_text_to_fp(BytesIO(pdf_data), output, laparams=laparams)
-    return output.getvalue()
+from .utils import pdf_text
 
 
 def test_generate_pdf_with_html():
     pdf_content = generate_pdf('<html><body>Is this thing on?</body></html>')
     assert pdf_content[:4] == b'%PDF'
-    text = get_pdf_text(pdf_content)
+    text = pdf_text(pdf_content)
     assert 'Is this thing on?\n\n\x0c' == text
 
 
@@ -90,7 +80,7 @@ def test_generate_url():
 
 def test_bad_arguments():
     with pytest.raises(RuntimeError) as exc_info:
-        generate_pdf('hellp', foobar='broken')
+        generate_pdf('hello', foobar='broken')
     assert 'error running wkhtmltopdf, command' in str(exc_info)
 
 

@@ -1,25 +1,106 @@
+import asyncio
 import re
 import subprocess
+
 from pathlib import Path
 
 from .version import VERSION
 
+__all__ = [
+    'AsyncPydf',
+    'generate_pdf',
+    'get_version',
+    'get_help',
+    'get_extended_help',
+]
+
 THIS_DIR = Path(__file__).parent.resolve()
-WK_PATH = THIS_DIR / 'bin' / 'wkhtmltopdf'
+WK_PATH = str(THIS_DIR / 'bin' / 'wkhtmltopdf')
 
 
-def execute_wk(*args, input=None):
+def _execute_wk(*args, input=None):
     """
     Generate path for the wkhtmltopdf binary and execute command.
 
     :param args: args to pass straight to subprocess.Popen
     :return: stdout, stderr
     """
-    wk_args = (str(WK_PATH),) + args
+    wk_args = (WK_PATH,) + args
     return subprocess.run(wk_args, input=input, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
-def generate_pdf(source, *,
+def _convert_args(py_args):
+    cmd_args = []
+    for name, value in py_args.items():
+        if value in {None, False}:
+            continue
+        arg_name = '--' + name.replace('_', '-')
+        if value is True:
+            cmd_args.append(arg_name)
+        else:
+            cmd_args.extend([arg_name, str(value)])
+
+    # read from stdin and write to stdout
+    cmd_args.extend(['-', '-'])
+    return cmd_args
+
+
+def _set_meta_data(pdf_content, **kwargs):
+    fields = [
+        ('Title', kwargs.get('title')),
+        ('Author', kwargs.get('author')),
+        ('Subject', kwargs.get('subject')),
+        ('Creator', kwargs.get('creator')),
+        ('Producer', kwargs.get('producer')),
+    ]
+    metadata = '\n'.join(f'/{name} ({value})' for name, value in fields if value)
+    if metadata:
+        pdf_content = re.sub(b'/Title.*\n.*\n/Producer.*', metadata.encode(), pdf_content, count=1)
+    return pdf_content
+
+
+class AsyncPydf:
+    def __init__(self, *, max_processes=20, loop=None):
+        self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
+        self.loop = loop
+
+    async def generate_pdf(self,
+                           html,
+                           title=None,
+                           author=None,
+                           subject=None,
+                           creator=None,
+                           producer=None,
+                           **cmd_args):
+        cmd_args = [WK_PATH] + _convert_args(cmd_args)
+        async with self.semaphore:
+            p = await asyncio.create_subprocess_exec(
+                *cmd_args,
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                loop=self.loop
+            )
+            p.stdin.write(html.encode())
+            p.stdin.close()
+            await p.wait()
+            pdf_content = await p.stdout.read()
+            if p.returncode != 0 and pdf_content[:4] != b'%PDF':
+                stderr = await p.stderr.read()
+                raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
+                                   'response: "{}"'.format(cmd_args, stderr.strip()))
+
+            return _set_meta_data(
+                pdf_content,
+                title=title,
+                author=author,
+                subject=subject,
+                creator=creator,
+                producer=producer,
+            )
+
+
+def generate_pdf(html, *,
                  title=None,
                  author=None,
                  subject=None,
@@ -55,7 +136,7 @@ def generate_pdf(source, *,
     Arguments which are True are passed with no value eg. just --quiet, False
     and None arguments are missed, everything else is passed with str(value).
 
-    :param source: html string to generate pdf from or url to get
+    :param html: html string to generate pdf from
     :param grayscale: bool
     :param lowquality: bool
     :param margin_bottom: string eg. 10mm
@@ -71,7 +152,7 @@ def generate_pdf(source, *,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
-    if source.lstrip().startswith(('http', 'www')):
+    if html.lstrip().startswith(('http', 'www')):
         raise ValueError('pdf generation from urls is not supported')
 
     py_args = dict(
@@ -90,43 +171,29 @@ def generate_pdf(source, *,
         image_quality=image_quality,
     )
     py_args.update(extra_kwargs)
-    cmd_args = []
-    for name, value in py_args.items():
-        if value in {None, False}:
-            continue
-        arg_name = '--' + name.replace('_', '-')
-        if value is True:
-            cmd_args.append(arg_name)
-        else:
-            cmd_args.extend([arg_name, str(value)])
+    cmd_args = _convert_args(py_args)
 
-    # read from stdin and write to stdout
-    cmd_args += ['-', '-']
-
-    p = execute_wk(*cmd_args, input=source.encode())
-    pdf_bytes = p.stdout
+    p = _execute_wk(*cmd_args, input=html.encode())
+    pdf_content = p.stdout
 
     # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
     # seem to have generated a pdf
-    if p.returncode != 0 and pdf_bytes[:4] != b'%PDF':
+    if p.returncode != 0 and pdf_content[:4] != b'%PDF':
         raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
                            'response: "{}"'.format(cmd_args, p.stderr.strip()))
 
-    fields = [
-        ('Title', title),
-        ('Author', author),
-        ('Subject', subject),
-        ('Creator', creator),
-        ('Producer', producer),
-    ]
-    metadata = '\n'.join(f'/{name} ({value})' for name, value in fields if value)
-    if metadata:
-        pdf_bytes = re.sub(b'/Title.*\n.*\n/Producer.*', metadata.encode(), pdf_bytes, count=1)
-    return pdf_bytes
+    return _set_meta_data(
+        pdf_content,
+        title=title,
+        author=author,
+        subject=subject,
+        creator=creator,
+        producer=producer,
+    )
 
 
 def _string_execute(*args):
-    return execute_wk(*args).stdout.decode().strip(' \n')
+    return _execute_wk(*args).stdout.decode().strip(' \n')
 
 
 def get_version():
