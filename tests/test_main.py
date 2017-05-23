@@ -1,11 +1,24 @@
+from io import BytesIO, StringIO
+
 import pytest
+import pdfminer.layout
+from pdfminer import high_level
 
 from pydf import generate_pdf, get_extended_help, get_help, get_version
+
+
+def get_pdf_text(pdf_data: bytes) -> str:
+    laparams = pdfminer.layout.LAParams()
+    output = StringIO()
+    high_level.extract_text_to_fp(BytesIO(pdf_data), output, laparams=laparams)
+    return output.getvalue()
 
 
 def test_generate_pdf_with_html():
     pdf_content = generate_pdf('<html><body>Is this thing on?</body></html>')
     assert pdf_content[:4] == b'%PDF'
+    text = get_pdf_text(pdf_content)
+    assert 'Is this thing on?\n\n\x0c' == text
 
 
 def test_generate_pdf_with_html_meta_data():
@@ -25,11 +38,6 @@ def test_generate_pdf_with_html_meta_data():
 /Author (Samuel Colvin)
 /Subject (the subject)
 /Creator (this is the creator)""" in beginning
-
-
-def test_generate_pdf_with_url():
-    pdf_content = generate_pdf('http://google.com')
-    assert pdf_content[:4] == b'%PDF'
 
 
 def test_unicode():

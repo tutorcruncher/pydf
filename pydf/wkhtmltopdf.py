@@ -76,7 +76,8 @@ def generate_pdf(source, *,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
-    is_url = source.lstrip().startswith(('http', 'www'))
+    if source.lstrip().startswith(('http', 'www')):
+        raise RuntimeError('pdf generation from urls is not supported')
 
     py_args = dict(
         cache_dir=cache_dir,
@@ -114,9 +115,12 @@ def generate_pdf(source, *,
     ]
     metadata = '\n'.join(f'/{name} ({value})' for name, value in fields if value)
 
-    def gen_pdf(src, cmd_args):
+    with NamedTemporaryFile(suffix='.html', mode='wb') as html_file:
+        html_file.write(source.encode())
+        html_file.flush()
+        html_file.seek(0)
         with NamedTemporaryFile(suffix='.pdf', mode='rb') as pdf_file:
-            cmd_args += [src, pdf_file.name]
+            cmd_args += [html_file.name, pdf_file.name]
             _, stderr, returncode = execute_wk(*cmd_args)
             pdf_file.seek(0)
             pdf_bytes = pdf_file.read()
@@ -129,15 +133,6 @@ def generate_pdf(source, *,
             if metadata:
                 pdf_bytes = re.sub(b'/Title.*\n.*\n/Producer.*', metadata.encode(), pdf_bytes, count=1)
             return pdf_bytes
-
-    if is_url:
-        return gen_pdf(source, cmd_args)
-
-    with NamedTemporaryFile(suffix='.html', mode='wb') as html_file:
-        html_file.write(source.encode())
-        html_file.flush()
-        html_file.seek(0)
-        return gen_pdf(html_file.name, cmd_args)
 
 
 def _string_execute(*args):
