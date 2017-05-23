@@ -35,6 +35,47 @@ Basic Usage
     with open('google.pdf', 'w') as f:
         f.write(pdf)
 
+Async Usage
+-----------
+
+Generation of lots of documents with wkhtmltopdf can be slow as wkhtmltopdf can only generate one document
+per process. To get round this pydf uses python 3's asyncio ``create_subprocess_exec`` to generate multiple pdfs
+at the same time. Thus the time taken to spin up processes doesn't slow you down.
+
+.. code:: python
+
+   async def go_async():
+       count = 20
+       apydf = AsyncPydf(max_processes=20)
+
+       async def gen(i_):
+           pdf = await apydf.generate_pdf(
+               html,
+               title='Benchmark',
+               author='Samuel Colvin',
+               subject='Mock Invoice',
+               page_size='A4',
+               zoom='1.25',
+               margin_left='8mm',
+               margin_right='8mm',
+           )
+           print(f'{i_:03}: {len(pdf)}')
+           file = OUT_DIR / f'output_{i_:03}.pdf'
+           file.write_bytes(pdf)
+
+       coros = []
+       for i in range(count):
+           coros.append(gen(i))
+       await asyncio.gather(*coros)
+       return count
+
+   loop = asyncio.get_event_loop()
+   loop.run_until_complete(go_async())
+
+
+See `benchmarks/run.py <https://github.com/tutorcruncher/pydf/blob/master/benchmark/run.py>`__
+for a full example.
+
 API
 ---
 
