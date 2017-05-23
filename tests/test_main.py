@@ -1,7 +1,7 @@
 from io import BytesIO, StringIO
 
-import pytest
 import pdfminer.layout
+import pytest
 from pdfminer import high_level
 
 from pydf import generate_pdf, get_extended_help, get_help, get_version
@@ -82,9 +82,16 @@ def test_extra_kwargs():
     assert pdf_content[:4] == b'%PDF'
 
 
+def test_generate_url():
+    with pytest.raises(ValueError) as exc_info:
+        generate_pdf('www.google.com')
+    assert 'pdf generation from urls is not supported' in str(exc_info)
+
+
 def test_bad_arguments():
-    with pytest.raises(RuntimeError):
-        generate_pdf('www.')
+    with pytest.raises(RuntimeError) as exc_info:
+        generate_pdf('hellp', foobar='broken')
+    assert 'error running wkhtmltopdf, command' in str(exc_info)
 
 
 def test_get_version():

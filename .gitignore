@@ -13,3 +13,4 @@ env
 .cache/
 benchmark/pdf_cache/
 benchmark/output/
+htmlcov/
