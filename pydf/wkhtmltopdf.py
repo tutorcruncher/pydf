@@ -1,3 +1,4 @@
+import re
 import subprocess
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -21,7 +22,14 @@ def execute_wk(*args):
     return stdout, stderr, p.returncode
 
 
-def generate_pdf(source,
+def generate_pdf(source, *,
+                 title=None,
+                 author=None,
+                 subject=None,
+                 creator=None,
+                 producer=None,
+                 # from here on arguments are passed via the commandline to wkhtmltopdf
+                 cache_dir=None,
                  quiet=True,
                  grayscale=False,
                  lowquality=False,
@@ -68,9 +76,10 @@ def generate_pdf(source,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
-    is_url = source.strip().startswith(('http', 'www'))
+    is_url = source.lstrip().startswith(('http', 'www'))
 
     py_args = dict(
+        cache_dir=cache_dir,
         quiet=quiet,
         grayscale=grayscale,
         lowquality=lowquality,
@@ -96,18 +105,30 @@ def generate_pdf(source,
         else:
             cmd_args.extend([arg_name, str(value)])
 
+    fields = [
+        ('Title', title),
+        ('Author', author),
+        ('Subject', subject),
+        ('Creator', creator),
+        ('Producer', producer),
+    ]
+    metadata = '\n'.join(f'/{name} ({value})' for name, value in fields if value)
+
     def gen_pdf(src, cmd_args):
         with NamedTemporaryFile(suffix='.pdf', mode='rb') as pdf_file:
             cmd_args += [src, pdf_file.name]
             _, stderr, returncode = execute_wk(*cmd_args)
             pdf_file.seek(0)
-            pdf_string = pdf_file.read()
+            pdf_bytes = pdf_file.read()
             # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
             # seem to have generated a pdf
-            if returncode != 0 and pdf_string[:4] != b'%PDF':
+            if returncode != 0 and pdf_bytes[:4] != b'%PDF':
                 raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
                                    'response: "{}"'.format(cmd_args, stderr.strip()))
-            return pdf_string
+
+            if metadata:
+                pdf_bytes = re.sub(b'/Title.*\n.*\n/Producer.*', metadata.encode(), pdf_bytes, count=1)
+            return pdf_bytes
 
     if is_url:
         return gen_pdf(source, cmd_args)
@@ -120,7 +141,7 @@ def generate_pdf(source,
 
 
 def _string_execute(*args):
-    return execute_wk(*args)[0].decode('utf8').strip(' \n')
+    return execute_wk(*args)[0].decode().strip(' \n')
 
 
 def get_version():

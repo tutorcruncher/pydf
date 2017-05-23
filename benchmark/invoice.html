@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice INV-1</title>
+  <link rel="stylesheet" href="https://secure.tutorcruncher.com/static/css/libraries.css">
+  <link rel="stylesheet" href="https://secure.tutorcruncher.com/static/css/pdf_styles.css">
+</head>
+
+<body>
+  <!--The first page is always a summary cover sheet-->
+  <page size="A4" class="container" style="margin-top: 30px">
+    <div class="row">
+      <div class="col-xs-5">
+        <h1 style="margin-bottom: 5px">
+          Summary
+        </h1>
+        <h3 style="margin-top: 5px">
+          <small>Invoice INV-1, Page 1 of 2</small>
+          <br>
+          <small>Date: !TODAY!</small>
+        </h3>
+      </div>
+      <div class="col-xs-7">
+        <img class="logo" src="https://secure.tutorcruncher.com/static/tc-box-logo.png">
+      </div>
+    </div>
+    <div class="row addresses">
+      <div class="col-xs-5">
+        <strong>Jane cli_a</strong><br>
+        cli_a House, Any Street<br>
+        cli_aville<br>
+        United Kingdom<br>
+        PO37 50DE<br>
+        01264 730 666<br>
+        testing+cli_a@tutorcruncher.com
+      </div>
+      <div class="col-xs-5 col-xs-offset-2 text-right">
+        <strong>XX branch display name XX</strong><br>
+        XX branch street XX<br>
+        XX branch town XX<br>
+        XX branch country XX<br>
+        XX branch pc XX<br>
+        -
+      </div>
+    </div>
+
+
+    <div class="row" style="margin-top: 10px;">
+      <div class="col-xs-12">
+        <p style="text-align: justify;">
+          <p>We would recommend that you check the hours on the attached invoices to make sure they correspond with the service you have been provided. If you think there is a discrepancy in the invoice please contact our accounts department before you settle the bill. We would ask you to settle the invoice within 7 days.</p>
+
+        </p>
+        <strong>Summary of invoices payable for the period</strong>
+      </div>
+    </div>
+
+    <table class="table table-bordered margin-top">
+      <tbody>
+      <tr>
+        <td>Work: total of contractors' invoices</td>
+        <td class="text-right">£100.00</td>
+      </tr>
+        <tr>
+          <td><strong>AMOUNT DUE FOR PAYMENT</strong></td>
+          <td class="text-right"><strong>£100.00</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row" style="margin-top: 5px">
+      <p class="col-xs-12">
+        This is a summary. For invoice breakdown please see individual PDFs also attached.
+      </p>
+    </div>
+    <div class="row text-right" style="padding-top: 20px;">
+      <div class="col-xs-12">
+        <h4>Please quote reference INV-1 with your payment</h4>
+
+        <div class="small-para-gap">
+          <p>Terms of payment - 10 days from invoice date.</p>
+
+<p>Please pay using the link in the email sent with this invoice.</p>
+
+        </div>
+      </div>
+    </div>
+  </page>
+
+  <!--After the cover sheet there's one page for contractor and potentially the agency-->
+    <page size="A4" class="container">
+      <div class="row">
+        <div class="col-xs-6">
+          <h1 style="margin-bottom: 5px">
+            Invoice
+          </h1>
+
+          <h3 style="margin-top: 5px">
+            <small>Invoice INV-1, Page 2 of 2</small>
+            <br>
+            <small>Date: !TODAY!</small>
+          </h3>
+        </div>
+        <div class="col-xs-6">
+          <img class="logo" align="right" src="https://secure.tutorcruncher.com/static/tc-box-logo.png">
+        </div>
+      </div>
+
+      <div class="row addresses">
+        <div class="col-xs-5">
+          <strong>Jane cli_a</strong><br>
+          cli_a House, Any Street<br>
+          cli_aville<br>
+          United Kingdom<br>
+          PO37 50DE<br>
+          01264 730 666
+      </div>
+        <div class="col-xs-5 col-xs-offset-2 text-right">
+          <strong>Jane con_a</strong><br>
+          con_a House, Any Street<br>
+          con_aville<br>
+          United Kingdom<br>
+          PO37 50DE
+        </div>
+      </div>
+
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>
+            Date
+          </th>
+          <th>
+            Item Description
+          </th>
+          <th class="text-right">
+            Units
+          </th>
+          <th class="text-right">
+            Amount
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="narrow">
+              !DATE!<br>
+              12:00
+            </td>
+            <td>
+              XX appointment topic XX<br>
+              Service #123<br> Appointment #123
+            </td>
+            <td class="text-right narrow">1 unit</td>
+            <td class="text-right narrow">£100.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="row text-right invoice-totals">
+
+        <div class="col-xs-2 col-xs-offset-8">
+          <p>Total:</p>
+        </div>
+
+        <div class="col-xs-2">
+          <strong>
+            <p>£100.00</p>
+          </strong>
+        </div>
+
+      </div>
+
+        <div class="row text-right info-block">
+          <div class="col-xs-12 small-para-gap">
+            <p>To ease administration XX branch display name XX collects fees on behalf of tutors. Please make a single payment to XX branch display name XX for the total amount shown on the statement page of this PDF and if paying by BACS or cheque please use the reference number supplied on this statement.</p>
+
+          </div>
+        </div>
+    </page>
+</body>
+</html>

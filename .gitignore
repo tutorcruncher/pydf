@@ -11,3 +11,5 @@ build
 env
 .coverage
 .cache/
+benchmark/pdf_cache/
+benchmark/output/
