@@ -40,8 +40,7 @@ time_taken = (time() - start) / count
 print(f'sync, time taken per pdf: {time_taken:0.3f}s')
 
 async def go_async():
-    count = 20
-    apydf = AsyncPydf(max_processes=20)
+    apydf = AsyncPydf()
 
     async def gen(i_):
         pdf = await apydf.generate_pdf(
@@ -55,12 +54,11 @@ async def go_async():
             margin_right='8mm',
         )
         print(f'{i_:03}: {len(pdf)}')
-        file = OUT_DIR / f'output_{i_:03}.pdf'
-        file.write_bytes(pdf)
+        f = OUT_DIR / f'output_{i_:03}.pdf'
+        f.write_bytes(pdf)
 
-    coros = []
-    for i in range(count):
-        coros.append(gen(i))
+    count = 20
+    coros = map(gen, range(count))
     await asyncio.gather(*coros)
     return count
 
