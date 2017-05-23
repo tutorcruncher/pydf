@@ -9,3 +9,5 @@ dist/
 .idea
 build
 env
+.coverage
+.cache/

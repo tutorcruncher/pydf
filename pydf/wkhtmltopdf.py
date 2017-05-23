@@ -1,7 +1,11 @@
-import os
 import subprocess
+from pathlib import Path
 from tempfile import NamedTemporaryFile
+
 from .version import VERSION
+
+THIS_DIR = Path(__file__).parent.resolve()
+WK_PATH = THIS_DIR / 'bin' / 'wkhtmltopdf'
 
 
 def execute_wk(*args):
@@ -11,14 +15,7 @@ def execute_wk(*args):
     :param args: args to pass straight to subprocess.Popen
     :return: stdout, stderr
     """
-    this_dir = os.path.dirname(__file__)
-    wk_name = 'wkhtmltopdf'
-    wkhtmltopdf_default = os.path.join(this_dir, 'bin', wk_name)
-    # Reference command
-    wkhtmltopdf_cmd = os.environ.get('WKHTMLTOPDF_CMD', wkhtmltopdf_default)
-    if not os.path.isfile(wkhtmltopdf_cmd):
-        raise IOError('wkhtmltopdf binary not found at %s' % wkhtmltopdf_cmd)
-    wk_args = (wkhtmltopdf_cmd,) + args
+    wk_args = (str(WK_PATH),) + args
     p = subprocess.Popen(wk_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     return stdout, stderr, p.returncode
@@ -100,22 +97,23 @@ def generate_pdf(source,
             cmd_args.extend([arg_name, str(value)])
 
     def gen_pdf(src, cmd_args):
-        with NamedTemporaryFile(suffix='.pdf', mode='rb+') as pdf_file:
+        with NamedTemporaryFile(suffix='.pdf', mode='rb') as pdf_file:
             cmd_args += [src, pdf_file.name]
             _, stderr, returncode = execute_wk(*cmd_args)
             pdf_file.seek(0)
             pdf_string = pdf_file.read()
             # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
             # seem to have generated a pdf
-            if returncode != 0 and pdf_string[:4] != '%PDF':
-                raise IOError('error running wkhtmltopdf, command: %r\nresponse: "%s"' % (cmd_args, stderr.strip()))
+            if returncode != 0 and pdf_string[:4] != b'%PDF':
+                raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
+                                   'response: "{}"'.format(cmd_args, stderr.strip()))
             return pdf_string
 
     if is_url:
         return gen_pdf(source, cmd_args)
 
     with NamedTemporaryFile(suffix='.html', mode='wb') as html_file:
-        html_file.write(source.encode('utf8'))
+        html_file.write(source.encode())
         html_file.flush()
         html_file.seek(0)
         return gen_pdf(html_file.name, cmd_args)

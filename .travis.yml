@@ -2,10 +2,8 @@ language: python
 sudo: false
 
 python:
-- '2.7'
-- '3.4'
 - '3.5'
-- '3.6-dev'
+- '3.6'
 - 'nightly'
 
 matrix:
@@ -13,14 +11,14 @@ matrix:
   - python: 'nightly'
 
 install:
-- pip install coverage flake8 Pygments docutils
+- make install
+- pip freeze
 
 script:
-- coverage run --source=pydf setup.py test
-- flake8 pydf/
-- if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then python setup.py check -rms; fi
-- python setup.py install
-- tests/check_file_permissions.py
+- make lint
+- make test
+- make benchmark
+- ./tests/check_tag.py
 - python -c "import pydf; print(pydf.get_version())"
 
 after_success:
@@ -35,4 +33,4 @@ deploy:
   distributions: sdist bdist_wheel
   on:
     tags: true
-    python: 3.5
+    python: 3.6

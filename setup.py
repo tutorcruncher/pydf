@@ -1,12 +1,13 @@
 import os
+from pathlib import Path
+
 from setuptools import setup
 from setuptools.command.install import install
 from pydf.version import VERSION
 
 description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
-THIS_DIR = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(THIS_DIR, 'README.rst')) as f:
-    long_description = f.read()
+THIS_DIR = Path(__file__).resolve().parent
+long_description = THIS_DIR.joinpath('README.rst').read_text()
 
 
 class OverrideInstall(install):
@@ -25,7 +26,7 @@ setup(
     long_description=long_description,
     author='Samuel Colvin',
     license='MIT',
-    author_email='S@muelColvin.com',
+    author_email='s@muelcolvin.com',
     url='https://github.com/tutorcruncher/pydf',
     packages=['pydf'],
     platforms='any',
@@ -36,13 +37,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         ],
-    test_suite='tests',
     zip_safe=False
 )
