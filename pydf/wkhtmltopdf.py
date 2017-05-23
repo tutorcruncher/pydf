@@ -1,6 +1,7 @@
 import asyncio
 import re
 import subprocess
+import tempfile
 
 from pathlib import Path
 
@@ -63,6 +64,10 @@ class AsyncPydf:
     def __init__(self, *, max_processes=20, loop=None):
         self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
         self.loop = loop
+        cache_dir = Path(tempfile.gettempdir()) / 'pydf_cache'
+        if not cache_dir.exists():
+            Path.mkdir(cache_dir)
+        self.cache_dir = str(cache_dir)
 
     async def generate_pdf(self,
                            html,
@@ -72,6 +77,7 @@ class AsyncPydf:
                            creator=None,
                            producer=None,
                            **cmd_args):
+        cmd_args.setdefault('cache_dir', self.cache_dir)
         cmd_args = [WK_PATH] + _convert_args(cmd_args)
         async with self.semaphore:
             p = await asyncio.create_subprocess_exec(

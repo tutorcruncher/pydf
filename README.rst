@@ -2,7 +2,7 @@ pydf
 ====
 
 
-|Build Status| |codecov.io| |PyPI Status| |license|
+|BuildStatus| |codecov| |PyPI| |license|
 
 PDF generation in python using
 `wkhtmltopdf <http://wkhtmltopdf.org/>`__.
@@ -94,26 +94,11 @@ option
 Low level function to call wkhtmltopdf, arguments are added to
 wkhtmltopdf binary and passed to subprocess with not processing.
 
-Changelog
----------
-
-0.30
-~~~~
-
--  uprev wkhtmltopdf from **0.12.2 (beta)** to **0.12.4**.
--  code cleanup
-- (this is the same as ``v0.3``, I made a mistake when versioning)
-
-0.21
-~~~~
-
-- correct permissions on wkhtmltopdf binary.
-
-.. |Build Status| image:: https://travis-ci.org/tutorcruncher/pydf.svg?branch=master
+.. |BuildStatus| image:: https://travis-ci.org/tutorcruncher/pydf.svg?branch=master
    :target: https://travis-ci.org/tutorcruncher/pydf
-.. |codecov.io| image:: https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master
+.. |codecov| image:: https://codecov.io/github/tutorcruncher/pydf/coverage.svg?branch=master
    :target: https://codecov.io/github/tutorcruncher/pydf?branch=master
-.. |PyPI Status| image:: https://img.shields.io/pypi/v/python-pdf.svg?style=flat
+.. |PyPI| image:: https://img.shields.io/pypi/v/python-pdf.svg?style=flat
    :target: https://pypi.python.org/pypi/python-pdf
 .. |license| image:: https://img.shields.io/pypi/l/python-pdf.svg
    :target: https://github.com/tutorcruncher/pydf

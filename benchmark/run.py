@@ -16,7 +16,7 @@ if not OUT_DIR.exists():
 
 
 def go_sync():
-    count = 20
+    count = 10
     for i in range(count):
         pdf = generate_pdf(
             html,
@@ -53,7 +53,6 @@ async def go_async():
             zoom='1.25',
             margin_left='8mm',
             margin_right='8mm',
-            cache_dir=PDF_CACHE,
         )
         print(f'{i_:03}: {len(pdf)}')
         file = OUT_DIR / f'output_{i_:03}.pdf'
