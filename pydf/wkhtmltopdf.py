@@ -1,5 +1,4 @@
 import asyncio
-import re
 import subprocess
 import tempfile
 
@@ -47,20 +46,6 @@ def _convert_args(**py_args):
     return cmd_args
 
 
-def _set_meta_data(pdf_content, **kwargs):
-    fields = [
-        ('Title', kwargs.get('title')),
-        ('Author', kwargs.get('author')),
-        ('Subject', kwargs.get('subject')),
-        ('Creator', kwargs.get('creator')),
-        ('Producer', kwargs.get('producer')),
-    ]
-    metadata = '\n'.join(f'/{name} ({value})' for name, value in fields if value)
-    if metadata:
-        pdf_content = re.sub(b'/Title.*\n.*\n/Producer.*', metadata.encode(), pdf_content, count=1)
-    return pdf_content
-
-
 class AsyncPydf:
     def __init__(self, *, max_processes=20, loop=None, cache_dir=DFT_CACHE_DIR):
         self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
@@ -69,14 +54,7 @@ class AsyncPydf:
             Path.mkdir(cache_dir)
         self.cache_dir = cache_dir
 
-    async def generate_pdf(self,
-                           html,
-                           title=None,
-                           author=None,
-                           subject=None,
-                           creator=None,
-                           producer=None,
-                           **cmd_args):
+    async def generate_pdf(self, html, **cmd_args):
         cmd_args = [WK_PATH] + _convert_args(cache_dir=self.cache_dir, **cmd_args)
         async with self.semaphore:
             p = await asyncio.create_subprocess_exec(
@@ -94,24 +72,10 @@ class AsyncPydf:
                 stderr = await p.stderr.read()
                 raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
                                    'response: "{}"'.format(cmd_args, stderr.strip()))
-
-            return _set_meta_data(
-                pdf_content,
-                title=title,
-                author=author,
-                subject=subject,
-                creator=creator,
-                producer=producer,
-            )
+            return pdf_content
 
 
 def generate_pdf(html, *,
-                 title: str=None,
-                 author: str=None,
-                 subject: str=None,
-                 creator: str=None,
-                 producer: str=None,
-                 # from here on arguments are passed via the commandline to wkhtmltopdf
                  cache_dir: Path=DFT_CACHE_DIR,
                  grayscale: bool=False,
                  lowquality: bool=False,
@@ -186,15 +150,7 @@ def generate_pdf(html, *,
     if p.returncode != 0 and pdf_content[:4] != b'%PDF':
         raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
                            'response: "{}"'.format(cmd_args, p.stderr.strip()))
-
-    return _set_meta_data(
-        pdf_content,
-        title=title,
-        author=author,
-        subject=subject,
-        creator=creator,
-        producer=producer,
-    )
+    return pdf_content
 
 
 def _string_execute(*args):

@@ -3,6 +3,10 @@
 History
 -------
 
+v0.33.0 (2017-05-24)
+....................
+* remove pdf metadata modification as it can break some pdf viewers
+
 v0.32.0 (2017-05-24)
 ....................
 * set ``cache_dir`` for ``generate_pdf`` by default

@@ -11,23 +11,13 @@ def test_generate_pdf_with_html():
     assert 'Is this thing on?\n\n\x0c' == text
 
 
-def test_generate_pdf_with_html_meta_data():
-    pdf_content = generate_pdf(
-        '<html><body>Is this thing on?</body></html>',
-        title='title foobar',
-        subject='the subject',
-        author='Samuel Colvin',
-        creator='this is the creator'
-    )
+def test_pdf_title():
+    pdf_content = generate_pdf('<html><head><title>the title</title></head><body>hello</body></html>')
     assert pdf_content[:4] == b'%PDF'
-    beginning = pdf_content.decode('utf8', 'ignore')[:300]
-    print(beginning)
-    assert """
-<<
-/Title (title foobar)
-/Author (Samuel Colvin)
-/Subject (the subject)
-/Creator (this is the creator)""" in beginning
+    text = pdf_text(pdf_content)
+    title = 'the title'.encode('utf-16be')
+    assert b'\n/Title (\xfe\xff%s)\n' % title in pdf_content
+    assert 'hello\n\n\x0c' == text
 
 
 def test_unicode():

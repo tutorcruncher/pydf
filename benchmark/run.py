@@ -17,9 +17,6 @@ def go_sync():
     for i in range(count):
         pdf = generate_pdf(
             html,
-            title='Benchmark',
-            author='Samuel Colvin',
-            subject='Mock Invoice',
             page_size='A4',
             zoom='1.25',
             margin_left='8mm',
@@ -41,9 +38,6 @@ async def go_async():
     async def gen(i_):
         pdf = await apydf.generate_pdf(
             html,
-            title='Benchmark',
-            author='Samuel Colvin',
-            subject='Mock Invoice',
             page_size='A4',
             zoom='1.25',
             margin_left='8mm',
