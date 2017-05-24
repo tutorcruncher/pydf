@@ -17,6 +17,7 @@ __all__ = [
 
 THIS_DIR = Path(__file__).parent.resolve()
 WK_PATH = str(THIS_DIR / 'bin' / 'wkhtmltopdf')
+DFT_CACHE_DIR = Path(tempfile.gettempdir()) / 'pydf_cache'
 
 
 def _execute_wk(*args, input=None):
@@ -30,7 +31,7 @@ def _execute_wk(*args, input=None):
     return subprocess.run(wk_args, input=input, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
-def _convert_args(py_args):
+def _convert_args(**py_args):
     cmd_args = []
     for name, value in py_args.items():
         if value in {None, False}:
@@ -61,13 +62,12 @@ def _set_meta_data(pdf_content, **kwargs):
 
 
 class AsyncPydf:
-    def __init__(self, *, max_processes=20, loop=None):
+    def __init__(self, *, max_processes=20, loop=None, cache_dir=DFT_CACHE_DIR):
         self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
         self.loop = loop
-        cache_dir = Path(tempfile.gettempdir()) / 'pydf_cache'
         if not cache_dir.exists():
             Path.mkdir(cache_dir)
-        self.cache_dir = str(cache_dir)
+        self.cache_dir = cache_dir
 
     async def generate_pdf(self,
                            html,
@@ -77,8 +77,7 @@ class AsyncPydf:
                            creator=None,
                            producer=None,
                            **cmd_args):
-        cmd_args.setdefault('cache_dir', self.cache_dir)
-        cmd_args = [WK_PATH] + _convert_args(cmd_args)
+        cmd_args = [WK_PATH] + _convert_args(cache_dir=self.cache_dir, **cmd_args)
         async with self.semaphore:
             p = await asyncio.create_subprocess_exec(
                 *cmd_args,
@@ -107,25 +106,25 @@ class AsyncPydf:
 
 
 def generate_pdf(html, *,
-                 title=None,
-                 author=None,
-                 subject=None,
-                 creator=None,
-                 producer=None,
+                 title: str=None,
+                 author: str=None,
+                 subject: str=None,
+                 creator: str=None,
+                 producer: str=None,
                  # from here on arguments are passed via the commandline to wkhtmltopdf
-                 cache_dir=None,
-                 grayscale=False,
-                 lowquality=False,
-                 margin_bottom=None,
-                 margin_left=None,
-                 margin_right=None,
-                 margin_top=None,
-                 orientation=None,
-                 page_height=None,
-                 page_width=None,
-                 page_size=None,
-                 image_dpi=None,
-                 image_quality=None,
+                 cache_dir: Path=DFT_CACHE_DIR,
+                 grayscale: bool=False,
+                 lowquality: bool=False,
+                 margin_bottom: str=None,
+                 margin_left: str=None,
+                 margin_right: str=None,
+                 margin_top: str=None,
+                 orientation: str=None,
+                 page_height: str=None,
+                 page_width: str=None,
+                 page_size: str=None,
+                 image_dpi: str=None,
+                 image_quality: str=None,
                  **extra_kwargs):
     """
     Generate a pdf from either a url or a html string.
@@ -158,8 +157,8 @@ def generate_pdf(html, *,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
-    if html.lstrip().startswith(('http', 'www')):
-        raise ValueError('pdf generation from urls is not supported')
+    if not cache_dir.exists():
+        Path.mkdir(cache_dir)
 
     py_args = dict(
         cache_dir=cache_dir,
@@ -177,7 +176,7 @@ def generate_pdf(html, *,
         image_quality=image_quality,
     )
     py_args.update(extra_kwargs)
-    cmd_args = _convert_args(py_args)
+    cmd_args = _convert_args(**py_args)
 
     p = _execute_wk(*cmd_args, input=html.encode())
     pdf_content = p.stdout

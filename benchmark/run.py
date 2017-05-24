@@ -7,9 +7,6 @@ from pydf import AsyncPydf, generate_pdf
 
 THIS_DIR = Path(__file__).parent.resolve()
 html = (THIS_DIR / 'invoice.html').read_text()
-PDF_CACHE = THIS_DIR / 'pdf_cache'
-if not PDF_CACHE.exists():
-    Path.mkdir(PDF_CACHE)
 OUT_DIR = THIS_DIR / 'output'
 if not OUT_DIR.exists():
     Path.mkdir(OUT_DIR)
@@ -27,7 +24,6 @@ def go_sync():
             zoom='1.25',
             margin_left='8mm',
             margin_right='8mm',
-            cache_dir=PDF_CACHE,
         )
         print(f'{i:03}: {len(pdf)}')
         file = OUT_DIR / f'output_{i:03}.pdf'

@@ -72,12 +72,6 @@ def test_extra_kwargs():
     assert pdf_content[:4] == b'%PDF'
 
 
-def test_generate_url():
-    with pytest.raises(ValueError) as exc_info:
-        generate_pdf('www.google.com')
-    assert 'pdf generation from urls is not supported' in str(exc_info)
-
-
 def test_bad_arguments():
     with pytest.raises(RuntimeError) as exc_info:
         generate_pdf('hello', foobar='broken')
