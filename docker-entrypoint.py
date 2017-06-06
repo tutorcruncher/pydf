@@ -15,6 +15,8 @@ For example:
 """
 import os
 import logging
+from time import time
+
 from aiohttp import web
 from pydf import AsyncPydf
 
@@ -30,6 +32,7 @@ async def index(request):
 
 
 async def generate(request):
+    start = time()
     config = {}
     for k, v in request.headers.items():
         if k.startswith('Pdf-') or k.startswith('Pdf_'):
@@ -41,10 +44,10 @@ async def generate(request):
     try:
         pdf_content = await app['apydf'].generate_pdf(data.decode(), **config)
     except RuntimeError as e:
-        logger.info('Error generating PDF, config: %s', config)
+        logger.info('Error generating PDF, time %0.2fs, config: %s', time() - start, config)
         return web.Response(text=str(e) + '\n', status=418)
     else:
-        logger.info('PDF generated, html length: %d, pdf length: %d', len(data), len(pdf_content))
+        logger.info('PDF generated in %0.2fs, html-len %d, pdf-len %d', time() - start, len(data), len(pdf_content))
         return web.Response(body=pdf_content, content_type='application/pdf')
 
 app = web.Application()
