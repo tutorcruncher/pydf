@@ -4,7 +4,7 @@ pydf pdf generation
 
 To generate PDF POST (or GET with data if possible) you HTML data to /generate.pdf.
 
-Extra arguments can be passed using http headers; any header starting "pdf-" will
+Extra arguments can be passed using http headers; any header starting "pdf-" or "pdf_" will
 have that prefix removed, be converted to lower case and passed to wkhtmltopdf.
 
 For example:
@@ -32,7 +32,7 @@ async def index(request):
 async def generate(request):
     config = {}
     for k, v in request.headers.items():
-        if k.startswith('Pdf-'):
+        if k.startswith('Pdf-') or k.startswith('Pdf_'):
             config[k[4:].lower()] = v.lower()
     data = await request.read()
     if not data:

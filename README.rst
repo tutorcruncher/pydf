@@ -69,7 +69,7 @@ pydf is available as a docker image with a very simple http API for generating p
 
 Simple ``POST`` (or ``GET`` with data if possible) you HTML data to ``/generate.pdf``.
 
-Arguments can be passed using http headers; any header starting ``pdf-`` will
+Arguments can be passed using http headers; any header starting ``pdf-`` or ``pdf_`` will
 have that prefix removed, be converted to lower case and passed to wkhtmltopdf.
 
 For example:
