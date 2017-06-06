@@ -71,12 +71,21 @@ Simple `POST` (or `GET` with data if possible) you HTML data to `/generate.pdf`.
 
 For example:
 
-
 .. code:: shell
 
-    docker run -p 8000:80 -d samuelcolvin/pydf
-    curl -d '<h1>this is html</h1>' http://localhost:8000/generate.pdf > created.pdf
-    open "created.pdf"
+   docker run -rm -p 8000:80 -d samuelcolvin/pydf
+   curl -d '<h1>this is html</h1>' http://localhost:8000/generate.pdf > created.pdf
+   open "created.pdf"
+
+or in your ``docker-compose.yml`` file
+
+.. code:: yaml
+
+   services:
+     pdf:
+       image: samuelcolvin/pydf
+
+Other services can then generate PDFs by making requests to ``pdf/generate.pdf``. Pretty cool.
 
 API
 ---
