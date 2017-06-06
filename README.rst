@@ -62,6 +62,22 @@ for a full example.
 
 Locally generating an entire invoice goes from 0.372s/pdf to 0.035s/pdf with the async model.
 
+Docker
+------
+
+pydf is available as a docker image with a very simple http API for generating pdfs.
+
+Simple `POST` (or `GET` with data if possible) you HTML data to `/generate.pdf`.
+
+For example:
+
+
+.. code:: shell
+
+    docker run -p 8000:80 -d samuelcolvin/pydf
+    curl -d '<h1>this is html</h1>' http://localhost:8000/generate.pdf > created.pdf
+    open "created.pdf"
+
 API
 ---
 
