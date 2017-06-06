@@ -2,7 +2,7 @@ pydf
 ====
 
 
-|BuildStatus| |codecov| |PyPI| |license|
+|BuildStatus| |codecov| |PyPI| |license| |docker|
 
 PDF generation in python using
 `wkhtmltopdf <http://wkhtmltopdf.org/>`__.
@@ -15,7 +15,7 @@ Currently using **wkhtmltopdf 0.12.4 (with patched qt)**, requires **Python 3.6+
 Install
 -------
 
-::
+.. code:: shell
 
     pip install python-pdf
 
@@ -67,9 +67,9 @@ Docker
 
 pydf is available as a docker image with a very simple http API for generating pdfs.
 
-Simple `POST` (or `GET` with data if possible) you HTML data to `/generate.pdf`.
+Simple ``POST`` (or ``GET`` with data if possible) you HTML data to ``/generate.pdf``.
 
-Extra arguments can be passed using http headers; any header starting "pdf-" will
+Arguments can be passed using http headers; any header starting ``pdf-`` will
 have that prefix removed, be converted to lower case and passed to wkhtmltopdf.
 
 For example:
@@ -77,10 +77,10 @@ For example:
 .. code:: shell
 
    docker run -rm -p 8000:80 -d samuelcolvin/pydf
-   curl -d '<h1>this is html</h1>' http://localhost:8000/generate.pdf > created.pdf
+   curl -d '<h1>this is html</h1>' -H "pdf-orientation: landscape" http://localhost:8000/generate.pdf > created.pdf
    open "created.pdf"
 
-or in your ``docker-compose.yml`` file
+In docker compose:
 
 .. code:: yaml
 
@@ -156,3 +156,5 @@ wkhtmltopdf binary and passed to subprocess with not processing.
    :target: https://pypi.python.org/pypi/python-pdf
 .. |license| image:: https://img.shields.io/pypi/l/python-pdf.svg
    :target: https://github.com/tutorcruncher/pydf
+.. |docker| image:: https://img.shields.io/docker/automated/samuelcolvin/pydf.svg
+   :target: https://hub.docker.com/r/samuelcolvin/pydf/

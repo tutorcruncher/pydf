@@ -1,7 +1,6 @@
 import asyncio
 import subprocess
 import tempfile
-
 from pathlib import Path
 
 from .version import VERSION

@@ -1,6 +1,7 @@
 import pytest
 
 from pydf import generate_pdf, get_extended_help, get_help, get_version
+
 from .utils import pdf_text
 
 
