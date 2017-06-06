@@ -3,6 +3,10 @@
 History
 -------
 
+v0.34.0 (2017-06-06)
+....................
+* improve error output
+
 v0.33.0 (2017-05-24)
 ....................
 * remove pdf metadata modification as it can break some pdf viewers

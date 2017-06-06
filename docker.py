@@ -2,18 +2,27 @@
 """
 pydf pdf generation
 
-To generate PDF POST (or GET with data if possible) you HTML data to /generate.pdf
+To generate PDF POST (or GET with data if possible) you HTML data to /generate.pdf.
+
+Extra arguments can be passed using http headers; any header starting "pdf-" will
+have that prefix removed, be converted to lower case and passed to wkhtmltopdf.
 
 For example:
 
     docker run -rm -p 8000:80 -d samuelcolvin/pydf
-    curl -d '<h1>this is html</h1>' http://localhost:8000/generate.pdf > created.pdf
+    curl -d '<h1>this is html</h1>' -H "pdf-orientation: landscape" http://localhost:8000/generate.pdf > created.pdf
     open "created.pdf"
 """
-
 import os
+import logging
 from aiohttp import web
 from pydf import AsyncPydf
+
+logger = logging.getLogger('main')
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 
 async def index(request):
@@ -21,11 +30,22 @@ async def index(request):
 
 
 async def generate(request):
+    config = {}
+    for k, v in request.headers.items():
+        if k.startswith('Pdf-'):
+            config[k[4:].lower()] = v.lower()
     data = await request.read()
     if not data:
+        logger.info('Request with no PDF data')
         raise web.HTTPBadRequest(text='400: no PDF data provided\n')
-    pdf_content = await app['apydf'].generate_pdf(data.decode())
-    return web.Response(body=pdf_content, content_type='application/pdf')
+    try:
+        pdf_content = await app['apydf'].generate_pdf(data.decode(), **config)
+    except RuntimeError as e:
+        logger.info('Error generating PDF, config: %s', config)
+        return web.Response(text=str(e) + '\n', status=418)
+    else:
+        logger.info('PDF generated, html length: %d, pdf length: %d', len(data), len(pdf_content))
+        return web.Response(body=pdf_content, content_type='application/pdf')
 
 app = web.Application()
 app.router.add_get('/', index)
@@ -33,5 +53,5 @@ app.router.add_route('*', '/generate.pdf', generate)
 app['apydf'] = AsyncPydf(loop=app.loop)
 
 port = int(os.getenv('PORT', '80'))
-print(f'starting pydf server on port {port}', flush=True)
+logger.info('starting pydf server on port %s', port)
 web.run_app(app, port=port, print=lambda v: None)

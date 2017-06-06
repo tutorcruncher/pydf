@@ -71,7 +71,7 @@ class AsyncPydf:
             if p.returncode != 0 and pdf_content[:4] != b'%PDF':
                 stderr = await p.stderr.read()
                 raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
-                                   'response: "{}"'.format(cmd_args, stderr.strip()))
+                                   'response: "{}"'.format(cmd_args, stderr.decode().strip()))
             return pdf_content
 
 
@@ -149,7 +149,7 @@ def generate_pdf(html, *,
     # seem to have generated a pdf
     if p.returncode != 0 and pdf_content[:4] != b'%PDF':
         raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
-                           'response: "{}"'.format(cmd_args, p.stderr.strip()))
+                           'response: "{}"'.format(cmd_args, p.stderr.decode().strip()))
     return pdf_content
 
 

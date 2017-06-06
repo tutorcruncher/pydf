@@ -7,7 +7,11 @@ from pydf.version import VERSION
 
 description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
 THIS_DIR = Path(__file__).resolve().parent
-long_description = THIS_DIR.joinpath('README.rst').read_text()
+readme_path = THIS_DIR / 'README.rst'
+if readme_path.exists():
+    long_description = readme_path.read_text()
+else:
+    long_description = description
 
 
 class OverrideInstall(install):
