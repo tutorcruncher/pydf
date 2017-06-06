@@ -3,6 +3,10 @@
 History
 -------
 
+v0.35.0 (2017-06-06)
+....................
+* add docker auto tagging
+
 v0.34.0 (2017-06-06)
 ....................
 * improve error output
