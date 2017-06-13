@@ -1,6 +1,8 @@
 #!/usr/bin/env python3.6
 """
-pydf pdf generation
+pydf
+
+pdf generation in docker.
 
 To generate PDF POST (or GET with data if possible) you HTML data to /generate.pdf.
 
@@ -39,8 +41,8 @@ async def generate(request):
             config[k[4:].lower()] = v.lower()
     data = await request.read()
     if not data:
-        logger.info('Request with no PDF data')
-        raise web.HTTPBadRequest(text='400: no PDF data provided\n')
+        logger.info('Request with no body data')
+        raise web.HTTPBadRequest(text='400: no HTML data to convert to PDF in request body\n')
     try:
         pdf_content = await app['apydf'].generate_pdf(data.decode(), **config)
     except RuntimeError as e:

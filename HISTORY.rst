@@ -3,6 +3,10 @@
 History
 -------
 
+v0.36.0 (2017-06-13)
+....................
+* allow alternative wkhtmltopdf binary via ``WKHTMLTOPDF_PATH`` environment variable
+
 v0.35.0 (2017-06-06)
 ....................
 * add docker auto tagging
