@@ -1,4 +1,5 @@
 import asyncio
+import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -14,7 +15,7 @@ __all__ = [
 ]
 
 THIS_DIR = Path(__file__).parent.resolve()
-WK_PATH = str(THIS_DIR / 'bin' / 'wkhtmltopdf')
+WK_PATH = os.getenv('WKHTMLTOPDF_PATH', str(THIS_DIR / 'bin' / 'wkhtmltopdf'))
 DFT_CACHE_DIR = Path(tempfile.gettempdir()) / 'pydf_cache'
 
 
