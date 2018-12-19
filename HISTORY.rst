@@ -3,6 +3,10 @@
 History
 -------
 
+v0.37.0 (2018-12-19)
+....................
+* upgrade wkhtmltopdf binary
+
 v0.36.0 (2017-06-13)
 ....................
 * allow alternative wkhtmltopdf binary via ``WKHTMLTOPDF_PATH`` environment variable
