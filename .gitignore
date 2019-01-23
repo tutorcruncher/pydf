@@ -6,7 +6,8 @@ dist/
 *.egg-info/
 .installed.cfg
 *.egg
-.idea
+.idea/
+.vscode/
 build
 env
 .coverage

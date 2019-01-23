@@ -1,5 +1,4 @@
 language: python
-sudo: false
 
 matrix:
   include:
@@ -12,6 +11,9 @@ matrix:
 
   allow_failures:
   - python: 3.8-dev
+
+before_install:
+  - sudo apt-get install -y libpng16-16
 
 install:
 - make install
