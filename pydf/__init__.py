@@ -1,2 +1,2 @@
-from .wkhtmltopdf import *  # noqa
 from .version import VERSION  # noqa
+from .wkhtmltopdf import *  # noqa

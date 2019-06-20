@@ -1,13 +1,20 @@
 language: python
-sudo: false
-
-python:
-- '3.6'
-- 'nightly'
 
 matrix:
+  include:
+  - python: '3.6'
+    dist: bionic
+  - python: '3.7'
+    dist: bionic
+  - python: 3.8-dev
+    dist: bionic
+
   allow_failures:
-  - python: 'nightly'
+  - python: 3.8-dev
+
+before_install:
+- apt-cache search libssl
+- sudo apt-get install -y libpng16-16 libssl1.1
 
 install:
 - make install
