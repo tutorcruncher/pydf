@@ -5,7 +5,7 @@ History
 
 v0.37.0 (2018-12-19)
 ....................
-* upgrade wkhtmltopdf binary
+* upgrade wkhtmltopdf binary to "wkhtmltopdf 0.12.5 for Ubuntu 18.04 (bionic)", #11. Requires heroku-18
 
 v0.36.0 (2017-06-13)
 ....................
