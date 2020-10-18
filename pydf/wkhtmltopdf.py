@@ -27,8 +27,10 @@ def _execute_wk(*args, input=None):
     :return: stdout, stderr
     """
     wk_args = (WK_PATH,) + args
-    return subprocess.run(wk_args, input=input, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+    try:
+        return subprocess.run(wk_args, input=input, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except OSError:
+        print('OSError: A path error was ocourred.')
 
 def _convert_args(**py_args):
     cmd_args = []
@@ -47,14 +49,18 @@ def _convert_args(**py_args):
 
 
 class AsyncPydf:
-    def __init__(self, *, max_processes=20, loop=None, cache_dir=DFT_CACHE_DIR):
+    def __init__(self, *, max_processes=20, loop=None, cache_dir=DFT_CACHE_DIR, executable_path=None):
         self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
         self.loop = loop
         if not cache_dir.exists():
             Path.mkdir(cache_dir)
         self.cache_dir = cache_dir
+        self.executable_path = executable_path
 
     async def generate_pdf(self, html, **cmd_args):
+        if self.executable_path != None:
+            WK_PATH = self.executable_path
+
         cmd_args = [WK_PATH] + _convert_args(cache_dir=self.cache_dir, **cmd_args)
         async with self.semaphore:
             p = await asyncio.create_subprocess_exec(
@@ -89,6 +95,7 @@ def generate_pdf(html, *,
                  page_size: str=None,
                  image_dpi: str=None,
                  image_quality: str=None,
+                 executable_path: str=None,
                  **extra_kwargs):
     """
     Generate a pdf from either a url or a html string.
@@ -121,6 +128,10 @@ def generate_pdf(html, *,
     :param extra_kwargs: any exotic extra options for wkhtmltopdf
     :return: string representing pdf
     """
+    global WK_PATH
+    if executable_path != None:
+        WK_PATH = executable_path
+
     if not cache_dir.exists():
         Path.mkdir(cache_dir)
 
@@ -143,6 +154,8 @@ def generate_pdf(html, *,
     cmd_args = _convert_args(**py_args)
 
     p = _execute_wk(*cmd_args, input=html.encode())
+    if p == None:
+        raise OSError('A path error was occourred.\n         Please configure the executable_path manually with: pydf.generate_pdf(excutable_path="YOUR_PATH")')  
     pdf_content = p.stdout
 
     # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
