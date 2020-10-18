@@ -14,7 +14,7 @@ Currently using **wkhtmltopdf 0.12.5 for Ubuntu 18.04 (bionic)**, requires **Pyt
 
 **If you're not on Linux amd64:** pydf comes bundled with a wkhtmltopdf binary which will only work on Linux amd64
 architectures. If you're on another OS or architecture your milage may vary, it is likely that you'll need to supply
-your own wkhtmltopdf binary and point pydf towards it by setting the ``WKHTMLTOPDF_PATH`` variable.
+your own wkhtmltopdf binary and point pydf towards it by setting the ``executable_path`` argument.
 
 Install
 -------
