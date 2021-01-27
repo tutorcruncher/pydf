@@ -38,7 +38,7 @@ async def generate(request):
     config = {}
     for k, v in request.headers.items():
         if k.startswith('Pdf-') or k.startswith('Pdf_'):
-            config[k[4:].lower()] = v.lower()
+            config[k[4:].lower()] = v
     data = await request.read()
     if not data:
         logger.info('Request with no body data')
