@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '**'
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: set up python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.9'
+
+    - name: install dependencies
+      run: |
+        sudo apt install libjpeg62 libc6
+        make install
+        pip freeze
+
+    - name: test
+      run: |
+        chmod +x /home/runner/work/pydf/pydf/pydf/bin/wkhtmltopdf
+        make lint
+        make test
+        make benchmark
+        python -c "import pydf; print(pydf.get_version())"
+
+    - name: test
+      run: make test
+
+    - name: codecov
+      run: bash <(curl -s https://codecov.io/bash)
