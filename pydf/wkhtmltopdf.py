@@ -62,7 +62,7 @@ class AsyncPydf:
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
-                loop=self.loop
+                loop=self.loop,
             )
             p.stdin.write(html.encode())
             p.stdin.close()
@@ -70,26 +70,31 @@ class AsyncPydf:
             pdf_content = await p.stdout.read()
             if p.returncode != 0 and pdf_content[:4] != b'%PDF':
                 stderr = await p.stderr.read()
-                raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
-                                   'response: "{}"'.format(cmd_args, stderr.decode().strip()))
+                raise RuntimeError(
+                    'error running wkhtmltopdf, command: {!r}\n'
+                    'response: "{}"'.format(cmd_args, stderr.decode().strip())
+                )
             return pdf_content
 
 
-def generate_pdf(html, *,
-                 cache_dir: Path=DFT_CACHE_DIR,
-                 grayscale: bool=False,
-                 lowquality: bool=False,
-                 margin_bottom: str=None,
-                 margin_left: str=None,
-                 margin_right: str=None,
-                 margin_top: str=None,
-                 orientation: str=None,
-                 page_height: str=None,
-                 page_width: str=None,
-                 page_size: str=None,
-                 image_dpi: str=None,
-                 image_quality: str=None,
-                 **extra_kwargs):
+def generate_pdf(
+    html,
+    *,
+    cache_dir: Path = DFT_CACHE_DIR,
+    grayscale: bool = False,
+    lowquality: bool = False,
+    margin_bottom: str = None,
+    margin_left: str = None,
+    margin_right: str = None,
+    margin_top: str = None,
+    orientation: str = None,
+    page_height: str = None,
+    page_width: str = None,
+    page_size: str = None,
+    image_dpi: str = None,
+    image_quality: str = None,
+    **extra_kwargs,
+):
     """
     Generate a pdf from either a url or a html string.
 
@@ -148,8 +153,9 @@ def generate_pdf(html, *,
     # it seems wkhtmltopdf's error codes can be false, we'll ignore them if we
     # seem to have generated a pdf
     if p.returncode != 0 and pdf_content[:4] != b'%PDF':
-        raise RuntimeError('error running wkhtmltopdf, command: {!r}\n'
-                           'response: "{}"'.format(cmd_args, p.stderr.decode().strip()))
+        raise RuntimeError(
+            'error running wkhtmltopdf, command: {!r}\n' 'response: "{}"'.format(cmd_args, p.stderr.decode().strip())
+        )
     return pdf_content
 
 

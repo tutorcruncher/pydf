@@ -28,6 +28,7 @@ jobs:
 
     - name: test
       run: |
+        chmod +x /home/runner/work/pydf/pydf/pydf/bin/wkhtmltopdf
         make lint
         make test
         make benchmark

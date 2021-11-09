@@ -1,19 +1,23 @@
+black = black -S -l 120 --target-version py38
+isort = isort -w 120
+
 .PHONY: install
 install:
 	pip install -U setuptools pip
 	pip install -U .
 	pip install -r tests/requirements.txt
 
-.PHONY: isort
-isort:
-	isort -rc -w 120 pydf
-	isort -rc -w 120 tests
+.PHONY: format
+format:
+	$(isort) pydf tests
+	$(black) pydf tests
 
 .PHONY: lint
 lint:
 	python setup.py check -rms
-	flake8 pydf/ tests/
-	pytest pydf -p no:sugar -q
+	flake8 pydf tests
+	$(isort) --check-only pydf tests
+	$(black) --check pydf tests
 
 .PHONY: test
 test:
