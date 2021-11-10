@@ -56,10 +56,7 @@ def test_custom_size():
 
 
 def test_extra_kwargs():
-    pdf_content = generate_pdf(
-        '<html><body>testing</body></html>',
-        header_right='Page [page] of [toPage]'
-    )
+    pdf_content = generate_pdf('<html><body>testing</body></html>', header_right='Page [page] of [toPage]')
     assert pdf_content[:4] == b'%PDF'
 
 

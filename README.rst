@@ -162,3 +162,17 @@ wkhtmltopdf binary and passed to subprocess with not processing.
    :target: https://github.com/tutorcruncher/pydf
 .. |docker| image:: https://img.shields.io/docker/automated/samuelcolvin/pydf.svg
    :target: https://hub.docker.com/r/samuelcolvin/pydf/
+
+
+Heroku
+-------
+
+If you are deploying onto Heroku, then you will need to install a couple of dependencies before WKHTMLTOPDF will work.
+
+Add the Heroku buildpack `https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku-community/apt.tgz`
+
+Then create an `Aptfile` in your root directory with the dependencies:
+
+.. code::shell
+  libjpeg62
+  libc6

@@ -1,9 +1,12 @@
 import os
+from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
 from setuptools import setup
 from setuptools.command.install import install
-from pydf.version import VERSION
+
+# avoid loading the package before requirements are installed:
+version = SourceFileLoader('version', 'pydf/version.py').load_module()
 
 description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
 THIS_DIR = Path(__file__).resolve().parent
@@ -25,7 +28,7 @@ class OverrideInstall(install):
 setup(
     name='python-pdf',
     cmdclass={'install': OverrideInstall},
-    version=str(VERSION),
+    version=version.VERSION,
     description=description,
     long_description=long_description,
     author='Samuel Colvin',
@@ -42,7 +45,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Internet :: WWW/HTTP',
         ],
     zip_safe=False

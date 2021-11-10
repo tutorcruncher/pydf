@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.8
 """
 pydf
 
@@ -55,7 +55,7 @@ async def generate(request):
 app = web.Application()
 app.router.add_get('/', index)
 app.router.add_route('*', '/generate.pdf', generate)
-app['apydf'] = AsyncPydf(loop=app.loop)
+app['apydf'] = AsyncPydf()
 
 port = int(os.getenv('PORT', '80'))
 logger.info('starting pydf server on port %s', port)

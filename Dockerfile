@@ -1,11 +1,11 @@
-FROM python:3.6
+FROM python:3.8
 
-RUN pip install aiohttp==2.1.0
+LABEL maintainer='s@muelcolvin.com'
+
+RUN pip install aiohttp==3.7.3
 ADD ./pydf /pydf
 ADD setup.py /
 RUN pip install -e .
-
-LABEL maintainer 's@muelcolvin.com'
 
 ADD ./docker-entrypoint.py /
 ENTRYPOINT ["/docker-entrypoint.py"]
