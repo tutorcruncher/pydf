@@ -23,8 +23,6 @@ Install
 
     pip install python-pdf
 
-For python 2 use ``pip install python-pdf==0.30.0``.
-
 Basic Usage
 -----------
 
