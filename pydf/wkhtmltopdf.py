@@ -47,9 +47,8 @@ def _convert_args(**py_args):
 
 
 class AsyncPydf:
-    def __init__(self, *, max_processes=20, loop=None, cache_dir=DFT_CACHE_DIR):
-        self.semaphore = asyncio.Semaphore(value=max_processes, loop=loop)
-        self.loop = loop
+    def __init__(self, *, max_processes=20, cache_dir=DFT_CACHE_DIR):
+        self.semaphore = asyncio.Semaphore(value=max_processes)
         if not cache_dir.exists():
             Path.mkdir(cache_dir)
         self.cache_dir = cache_dir
@@ -62,7 +61,6 @@ class AsyncPydf:
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
-                loop=self.loop,
             )
             p.stdin.write(html.encode())
             p.stdin.close()
