@@ -10,7 +10,7 @@ PDF generation in python using
 Wkhtmltopdf binaries are precompiled and included in the package making
 pydf easier to use, in particular this means pydf works on heroku.
 
-Currently using **wkhtmltopdf 0.12.5 for Ubuntu 18.04 (bionic)**, requires **Python 3.6+**.
+Currently using **wkhtmltopdf 0.12.6.1 r3 for Ubuntu 22.04 (jammy)**, requires **Python 3.6+**.
 
 **If you're not on Linux amd64:** pydf comes bundled with a wkhtmltopdf binary which will only work on Linux amd64
 architectures. If you're on another OS or architecture your mileage may vary, it is likely that you'll need to supply
