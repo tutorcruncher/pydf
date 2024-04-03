@@ -1,6 +1,3 @@
-black = black -S -l 120 --target-version py38
-isort = isort -w 120
-
 .PHONY: install
 install:
 	pip install -U setuptools pip
@@ -9,15 +6,14 @@ install:
 
 .PHONY: format
 format:
-	$(isort) pydf tests
-	$(black) pydf tests
+	ruff check --fix pydf tests
+	ruff format pydf tests
 
 .PHONY: lint
 lint:
 	python setup.py check -rms
-	flake8 pydf tests
-	$(isort) --check-only pydf tests
-	$(black) --check pydf tests
+	ruff check pydf tests
+	ruff format --check pydf tests
 
 .PHONY: test
 test:

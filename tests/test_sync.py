@@ -22,7 +22,7 @@ def test_pdf_title():
 
 
 def test_unicode():
-    pdf_content = generate_pdf(u'<html><body>Schrödinger</body></html>')
+    pdf_content = generate_pdf('<html><body>Schrödinger</body></html>')
     assert pdf_content[:4] == b'%PDF'
 
 
